@@ -11,9 +11,12 @@
         <activity android:name=".Pong">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
+                <action android:name="Pong"/>
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".YouWin">
+
         </activity>
     </application>
 

@@ -12,7 +12,7 @@ import static com.example.gustavogusmao.pong.R.attr.height;
 public class Ball
 {
     private Paint red;
-    private float x, y, radius, speedX, speedY;
+    private float x, y, radius, speedX, speedY, maxSpeedx, maxSpeedy;
     private boolean couldCollide;
     private Player player;
     private Player2 player2;
@@ -28,6 +28,8 @@ public class Ball
         speedX = 12;
         speedY = -12f;
         couldCollide = true;
+        maxSpeedx = 18f;
+        maxSpeedy = -18f;
 
         player = Player.getInstance();
         player2 = player2.getInstance();
@@ -63,7 +65,18 @@ public class Ball
 
     private void CollisionWithScreen()
     {
-        if(x + radius > GameView.screenW || x - radius < 0) ChangeBallState(true);
+        if(x + radius > GameView.screenW || x - radius < 0)
+        {
+            if(maxSpeedx > speedX)
+            {
+                speedX += 0.5f;
+                ChangeBallState(true);
+            }
+            else
+            {
+                ChangeBallState(true);
+            }
+        }
         //else if(y - radius < 0) ChangeBallState(false);
         else if(x + radius > GameView.screenW) GameView.isDead = true;
         else couldCollide = true;
@@ -74,16 +87,36 @@ public class Ball
         if (x - radius < player.GetX() + player.GetX() && x + radius > player.GetX() &&
                 y - radius < player.GetY() + player.GetY() && y + radius > player.GetY())
         {
-            speedY *= -1;
-            couldCollide = false;
-            GameView.score +=1;
+            if(maxSpeedy > speedY)
+            {
+                speedY += 0.5f;
+                speedY *= -1;
+                couldCollide = false;
+                GameView.score +=1;
+            }
+            else
+            {
+                speedY *= -1;
+                couldCollide = false;
+                GameView.score +=1;
+            }
         }
         if (x - radius < player2.GetX() + player2.GetX() && x + radius > player2.GetX() &&
                 y - radius < player2.GetY() + player2.GetY() && y + radius > player2.GetY())
         {
-            speedY *= -1;
-            couldCollide = false;
-            GameView.score +=1;
+            if(maxSpeedx > speedX)
+            {
+                speedY += 0.5f;
+                speedY *= -1;
+                couldCollide = false;
+                GameView.score += 1;
+            }
+            else
+            {
+                speedY *= -1;
+                couldCollide = false;
+                GameView.score += 1;
+            }
         }
     }
 }

@@ -3,6 +3,7 @@ package com.example.gustavogusmao.pong; /**
  */
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -13,9 +14,10 @@ import android.view.View;
 
 public class GameView extends View implements Runnable
 {
-    public static int screenW, screenH, score;
+    public static int screenW, screenH, score, HighScore;
     public static boolean isDead, isPaused, isUpdating;
-    public String Scorepoints;
+    public String Scorepoints, HighPoints;
+    public String Restart = "Touch to restart";
 
     private Handler handler;
     private Context c;
@@ -99,8 +101,9 @@ public class GameView extends View implements Runnable
             player.draw(canvas);
             player2.draw(canvas);
             canvas.drawText(Scorepoints, 100f, 100f, p);
+            canvas.drawText(HighPoints, 100f, 200f, p);
         }
-        else canvas.drawText("Touch to restart", screenW/ 2 - 80f, screenH / 2, p);
+        else canvas.drawText(Restart, screenW/ 2 - (Restart.length()/2), screenH / 2, p);
     }
 
     private void Update()
@@ -112,17 +115,29 @@ public class GameView extends View implements Runnable
             player2.update();
             OutOfScreen();
             Scorepoints = "Score: " + score;
+            HighPoints = "High Score: " + HighScore;
         }
-        else if(isDead) GameOver();
+       /* if(score >= 10)
+        {
+            Intent i = new Intent(c, YouWin.class);
+            c.startActivity(i);
+        }*/
+        else if(score >= 10 && isDead){
+            Intent i = new Intent(c, YouWin.class);
+            c.startActivity(i);
+            GameOver();
+        }
+        else if(isDead && score < 10){
+            GameOver();
+        }
     }
 
     private void GameOver()
     {
-        /*if(Score.score > highScore)
+        if(score > HighScore)
         {
-            dt.SetHighScore(c, Score.score);
-            highScore = Score.score;
-        }*/
+            HighScore = score;
+        }
     }
 
     private void RestartGame()
